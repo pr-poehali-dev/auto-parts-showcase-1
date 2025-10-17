@@ -47,7 +47,7 @@ const Index = () => {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16 animate-fade-in">
-              <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white mb-6 md:mb-8 leading-[0.9] tracking-tighter">
+              <h1 className="sm:text-6xl md:text-8xl lg:text-9xl font-black text-white mb-6 md:mb-8 leading-[0.9] tracking-tighter text-4xl">
                 Оригинальные
                 <span className="block bg-gradient-to-r from-primary via-orange-500 to-primary bg-clip-text text-transparent">
                   запчасти
