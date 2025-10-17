@@ -1,9 +1,29 @@
 import { useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+
+const AnimatedSection = ({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-1000 ${
+        inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+      } ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  );
+};
 
 const Index = () => {
   const [formData, setFormData] = useState({
@@ -58,18 +78,22 @@ const Index = () => {
 
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16 animate-slide-up">
-            <h2 className="text-5xl md:text-6xl font-black text-secondary mb-4 tracking-tight">
-              О компании
-            </h2>
-            <div className="w-24 h-1 bg-primary mx-auto" />
-          </div>
+          <AnimatedSection>
+            <div className="text-center mb-16">
+              <h2 className="text-5xl md:text-6xl font-black text-secondary mb-4 tracking-tight">
+                О компании
+              </h2>
+              <div className="w-24 h-1 bg-primary mx-auto" />
+            </div>
+          </AnimatedSection>
           
           <div className="max-w-4xl mx-auto">
-            <p className="text-xl text-muted-foreground leading-relaxed mb-8 text-center">
-              Мы специализируемся на поставке оригинальных автозапчастей для всех марок автомобилей. 
-              Более 15 лет на рынке, тысячи довольных клиентов и безупречная репутация.
-            </p>
+            <AnimatedSection delay={200}>
+              <p className="text-xl text-muted-foreground leading-relaxed mb-8 text-center">
+                Мы специализируемся на поставке оригинальных автозапчастей для всех марок автомобилей. 
+                Более 15 лет на рынке, тысячи довольных клиентов и безупречная репутация.
+              </p>
+            </AnimatedSection>
             
             <div className="grid md:grid-cols-3 gap-8 mt-16">
               {[
@@ -77,12 +101,14 @@ const Index = () => {
                 { number: '50K+', label: 'Довольных клиентов' },
                 { number: '100%', label: 'Оригинальные запчасти' }
               ].map((stat, index) => (
-                <Card key={index} className="border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-                  <CardContent className="p-8 text-center">
-                    <div className="text-5xl font-black text-primary mb-2">{stat.number}</div>
-                    <div className="text-muted-foreground font-medium">{stat.label}</div>
-                  </CardContent>
-                </Card>
+                <AnimatedSection key={index} delay={300 + index * 150}>
+                  <Card className="border-none shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
+                    <CardContent className="p-8 text-center">
+                      <div className="text-5xl font-black text-primary mb-2">{stat.number}</div>
+                      <div className="text-muted-foreground font-medium">{stat.label}</div>
+                    </CardContent>
+                  </Card>
+                </AnimatedSection>
               ))}
             </div>
           </div>
@@ -91,12 +117,14 @@ const Index = () => {
 
       <section className="py-24 bg-muted/30">
         <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-black text-secondary mb-4 tracking-tight">
-              Преимущества
-            </h2>
-            <div className="w-24 h-1 bg-primary mx-auto" />
-          </div>
+          <AnimatedSection>
+            <div className="text-center mb-16">
+              <h2 className="text-5xl md:text-6xl font-black text-secondary mb-4 tracking-tight">
+                Преимущества
+              </h2>
+              <div className="w-24 h-1 bg-primary mx-auto" />
+            </div>
+          </AnimatedSection>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
@@ -121,15 +149,17 @@ const Index = () => {
                 description: 'Консультации специалистов в любое время'
               }
             ].map((advantage, index) => (
-              <Card key={index} className="border-none shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 group">
-                <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary group-hover:scale-110 transition-all">
-                    <Icon name={advantage.icon} size={32} className="text-primary group-hover:text-white transition-colors" />
-                  </div>
-                  <h3 className="text-xl font-bold text-secondary mb-3">{advantage.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{advantage.description}</p>
-                </CardContent>
-              </Card>
+              <AnimatedSection key={index} delay={index * 100}>
+                <Card className="border-none shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 group h-full">
+                  <CardContent className="p-8 text-center">
+                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-primary group-hover:scale-110 transition-all">
+                      <Icon name={advantage.icon} size={32} className="text-primary group-hover:text-white transition-colors" />
+                    </div>
+                    <h3 className="text-xl font-bold text-secondary mb-3">{advantage.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{advantage.description}</p>
+                  </CardContent>
+                </Card>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -138,70 +168,74 @@ const Index = () => {
       <section id="consultation" className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-5xl md:text-6xl font-black text-secondary mb-4 tracking-tight">
-                Консультация
-              </h2>
-              <div className="w-24 h-1 bg-primary mx-auto mb-6" />
-              <p className="text-xl text-muted-foreground">
-                Оставьте заявку и наш специалист свяжется с вами в течение 15 минут
-              </p>
-            </div>
+            <AnimatedSection>
+              <div className="text-center mb-12">
+                <h2 className="text-5xl md:text-6xl font-black text-secondary mb-4 tracking-tight">
+                  Консультация
+                </h2>
+                <div className="w-24 h-1 bg-primary mx-auto mb-6" />
+                <p className="text-xl text-muted-foreground">
+                  Оставьте заявку и наш специалист свяжется с вами в течение 15 минут
+                </p>
+              </div>
+            </AnimatedSection>
             
-            <Card className="border-none shadow-2xl">
-              <CardContent className="p-8 md:p-12">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-secondary mb-2">
-                      Ваше имя
-                    </label>
-                    <Input
-                      placeholder="Иван Иванов"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="h-12 text-base"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-semibold text-secondary mb-2">
-                      Телефон
-                    </label>
-                    <Input
-                      type="tel"
-                      placeholder="+7 (999) 123-45-67"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="h-12 text-base"
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-semibold text-secondary mb-2">
-                      Ваш вопрос
-                    </label>
-                    <Textarea
-                      placeholder="Опишите, какие запчасти вам нужны..."
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="min-h-32 text-base"
-                      required
-                    />
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    size="lg" 
-                    className="w-full bg-primary hover:bg-primary/90 text-white h-14 text-lg font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
-                  >
-                    Отправить заявку
-                    <Icon name="Send" size={20} className="ml-2" />
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+            <AnimatedSection delay={300}>
+              <Card className="border-none shadow-2xl">
+                <CardContent className="p-8 md:p-12">
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-semibold text-secondary mb-2">
+                        Ваше имя
+                      </label>
+                      <Input
+                        placeholder="Иван Иванов"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="h-12 text-base"
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-secondary mb-2">
+                        Телефон
+                      </label>
+                      <Input
+                        type="tel"
+                        placeholder="+7 (999) 123-45-67"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        className="h-12 text-base"
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-secondary mb-2">
+                        Ваш вопрос
+                      </label>
+                      <Textarea
+                        placeholder="Опишите, какие запчасти вам нужны..."
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        className="min-h-32 text-base"
+                        required
+                      />
+                    </div>
+                    
+                    <Button 
+                      type="submit" 
+                      size="lg" 
+                      className="w-full bg-primary hover:bg-primary/90 text-white h-14 text-lg font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
+                    >
+                      Отправить заявку
+                      <Icon name="Send" size={20} className="ml-2" />
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </AnimatedSection>
           </div>
         </div>
       </section>
